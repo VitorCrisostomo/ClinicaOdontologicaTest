@@ -1,45 +1,61 @@
-from atributos import *
+import json
+import os
 
-class Dentista:
-    def __init__(self, nome: str, login: str, senha: str):
-        self.nome = Nome(nome)
-        self.login = Login(login)
-        self.senha = Senha(senha)
+class Medicacao:
+    arquivo_json = "remedios.json"  # arquivo padrão, pode ser alterado se necessário
 
-    def __str__(self):
-        return f"Dentista: {self.nome}"
-
-
-class Tecnico:
-    def __init__(self, nome: str, login: str, senha: str):
-        self.nome = Nome(nome)
-        self.login = Login(login)
-        self.senha = Senha(senha)
-
-    def __str__(self):
-        return f"Técnico: {self.nome}"
-    
-class Paciente:
-    def __init__(self, nome:str, idPaciente:int):
+    def __init__(self, nome: str, classificacao: str, descricao: str):
         self.nome = nome
-        self.idPaciente = idPaciente
+        self.classificacao = classificacao
+        self.descricao = descricao
 
+    @classmethod
+    def _carregar_remedios(cls):
+        """Carrega o dicionário de remédios do JSON, ou retorna um vazio se não existir."""
+        if os.path.exists(cls.arquivo_json):
+            with open(cls.arquivo_json, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return {}
 
-class Trabalho:
-    def __init__(self, paciente: Paciente, tecnico: Tecnico, dataInicio: str,
-                 dataFinal: str, tipo: str, dentes: list[str], cor: str, translucidez: str):
-        self.tecnico = tecnico
-        self.paciente = paciente
-        self.dataInicio = Data(dataInicio)
-        self.dataFinal = Data(dataFinal)
-        self.tipo = TipoTrabalho(tipo)
-        self.dentes = Dentes(dentes, cor, translucidez)
-        self.preco = self.tipo.valor * len(self.dentes.numeros)
+    @classmethod
+    def _salvar_remedios(cls, remedios):
+        """Salva o dicionário de remédios no arquivo JSON."""
+        with open(cls.arquivo_json, "w", encoding="utf-8") as f:
+            json.dump(remedios, f, ensure_ascii=False, indent=4)
 
-    def __str__(self):
-        return (f"Paciente = {self.paciente.nome}, Técnico = {self.tecnico.nome}, "
-                f"Data Inicial = {self.dataInicio}, Data Final = {self.dataFinal}, "
-                f"Tipo = {self.tipo.tipo}, Dentes = {self.dentes.numeros}, "
-                f"Cor = {self.dentes.cor}, Translucidez = {self.dentes.translucidez}, Preço = R${self.preco:.2f}")
+    def adicionar_medicacao(self):
+        remedios = self._carregar_remedios()
+        remedios[self.nome] = {
+            "classificacao": self.classificacao,
+            "descricao": self.descricao
+        }
+        self._salvar_remedios(remedios)
+        print(f"Medicação '{self.nome}' adicionada/atualizada com sucesso!")
 
-    
+    def remover_medicacao(self):
+        remedios = self._carregar_remedios()
+        if self.nome in remedios:
+            del remedios[self.nome]
+            self._salvar_remedios(remedios)
+            print(f"Medicação '{self.nome}' removida com sucesso!")
+        else:
+            print(f"Medicação '{self.nome}' não encontrada no arquivo.")
+
+    @classmethod
+    def listar_todas(cls):
+        remedios = cls._carregar_remedios()
+        if not remedios:
+            print("Nenhuma medicação encontrada.")
+            return
+        print("Lista de todas as medicações:")
+        for nome, info in remedios.items():
+            print(f"- {nome} ({info['classificacao']}): {info['descricao']}")
+
+    @classmethod
+    def buscar_medicacao(cls, nome):
+        remedios = cls._carregar_remedios()
+        if nome in remedios:
+            info = remedios[nome]
+            print(f"{nome} ({info['classificacao']}): {info['descricao']}")
+        else:
+            print(f"Medicação '{nome}' não encontrada.")

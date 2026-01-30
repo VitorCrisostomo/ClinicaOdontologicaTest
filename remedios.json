@@ -1,0 +1,26 @@
+{
+    "Paracetamol": {
+        "classificacao": "Analgesico/Antipiretico",
+        "descricao": "Alivia dores leves a moderadas e reduz febre."
+    },
+    "Ibuprofeno": {
+        "classificacao": "Anti-inflamatorio/Analgesico",
+        "descricao": "Reduz inflamação, dor e febre."
+    },
+    "Amoxicilina": {
+        "classificacao": "Antibiotico",
+        "descricao": "Usado no tratamento de infecções bacterianas."
+    },
+    "Dipirona": {
+        "classificacao": "Analgesico/Antipiretico",
+        "descricao": "Alivia dor e febre, especialmente em casos agudos."
+    },
+    "Losartana": {
+        "classificacao": "Anti-hipertensivo",
+        "descricao": "Usado para reduzir a pressão arterial e proteger rins em pacientes com diabetes."
+    },
+    "Omeprazol": {
+        "classificacao": "Inibidor de bomba de proton",
+        "descricao": "Reduz a acidez estomacal, indicado para refluxo e úlceras."
+    }
+}
